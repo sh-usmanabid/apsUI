@@ -4,6 +4,10 @@ const port = 3000
 
 app.use('/assets', express.static('assets'))
 
+app.get('/', (req, res) => {
+    res.sendFile('/views/index.html', { root: __dirname })
+})
+
 app.get('/food', (req, res) => {
     res.sendFile('/views/food.html', { root: __dirname })
 })
