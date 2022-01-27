@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+
+    <!-- CSS Files -->
+    <link id="pagestyle" href="assets/css/style.css" rel="stylesheet" />
+
+</head>
+
+<body class="g-sidenav-show  bg-gray-100">
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <div class="card z-index-2">
+                    <div class="card-header pb-0">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" id="btn-1" class="btn btn-secondary">Food Box Data</button>
+                            <button type="button" id="btn-2" class="btn btn-success">Medicine Box Data</button>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="chart">
+                            <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Files -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+    <script>
+
+        document.getElementById("btn-1").addEventListener("click", function() {
+            window.location = 'food.html'
+        })
+
+        document.getElementById("btn-2").addEventListener("click", function() {
+            window.location = 'medicine.html'
+        })
+
+    </script>
+
+    <script>
+        const jsonData = []
+
+        let request = new XMLHttpRequest()
+        request.open('GET', 'https://warm-mesa-70121.herokuapp.com/api/get-med', true)
+        request.send()
+
+        request.onload = () => {
+            if(request.status == 200) {
+
+                const data = JSON.parse(request.response)
+                data.forEach((item, index) => {
+
+                    let date = new Date(item.dateTime._seconds * 1000)
+                    let time = date.getHours() + '.' + date.getMinutes()
+
+                    jsonData.push({
+                        x: date,
+                        y: time
+                    })
+
+                })
+                drawChart()
+            }
+            else {
+                console.log(request.statusText)
+            }
+        }
+
+    </script>
+
+    <script>
+
+        function drawChart() {
+
+            var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+            var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
+
+            gradientStroke1.addColorStop(1, 'rgba(169, 50, 38, 0.2)');
+            gradientStroke1.addColorStop(0.2, 'rgba(169, 50, 38, 0.0)');
+            gradientStroke1.addColorStop(0, 'rgba(169, 50, 38, 0)');
+
+            new Chart(ctx2, {
+                type: "line",
+                data: {
+                    datasets: [{
+                        label: "Medicine",
+                        tension: 0.4,
+                        borderWidth: 0,
+                        pointRadius: 0,
+                        borderColor: "#A93226",
+                        borderWidth: 3,
+                        backgroundColor: gradientStroke1,
+                        fill: true,
+                        data: jsonData,
+                        maxBarThickness: 6
+                    },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                    scales: {
+                        y: {
+                            grid: {
+                                drawBorder: false,
+                                display: true,
+                                drawOnChartArea: true,
+                                drawTicks: false,
+                                borderDash: [5, 5]
+                            },
+                            ticks: {
+                                display: true,
+                                padding: 10,
+                                color: '#b2b9bf',
+                                font: {
+                                    size: 11,
+                                    family: "Open Sans",
+                                    style: 'normal',
+                                    lineHeight: 2
+                                },
+                            }
+                        },
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            },
+                            grid: {
+                                drawBorder: false,
+                                display: false,
+                                drawOnChartArea: false,
+                                drawTicks: false,
+                                borderDash: [5, 5]
+                            },
+                            ticks: {
+                                display: true,
+                                color: '#b2b9bf',
+                                padding: 20,
+                                font: {
+                                    size: 11,
+                                    family: "Open Sans",
+                                    style: 'normal',
+                                    lineHeight: 2
+                                },
+                            }
+                        },
+                    },
+                },
+            });
+
+        }
+
+    </script>
+
+</body>
+</html>
