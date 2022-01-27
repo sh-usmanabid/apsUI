@@ -1,25 +1,27 @@
 const express = require('express')
+const path = require('path')
 const app = express()
-const port = 3000
 
 app.use('/assets', express.static('assets'))
 
+const port = process.env.PORT || 3000;
+
 app.get('/', (req, res) => {
-    res.sendFile('/views/index.html', { root: __dirname })
+    res.sendFile(path.join(__dirname, './views/index.html'))
 })
 
 app.get('/food', (req, res) => {
-    res.sendFile('/views/food.html', { root: __dirname })
+    res.sendFile(path.join(__dirname, './views/food.html'))
 })
 
 app.get('/medicine', (req, res) => {
-    res.sendFile('/views/medicine.html', { root: __dirname })
+    res.sendFile(path.join(__dirname, './views/medicine.html'))
 })
 
 app.get('/location', (req, res) => {
-    res.sendFile('/views/location.html', { root: __dirname })
+    res.sendFile(path.join(__dirname, './views/location.html'))
 })
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log('Server started at http://localhost:' + port)
 })
