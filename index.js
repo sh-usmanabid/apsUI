@@ -22,6 +22,10 @@ app.get('/location', (req, res) => {
     res.sendFile(path.join(__dirname, './views/location.html'))
 })
 
+app.get('/settings', (req, res) => {
+    res.sendFile(path.join(__dirname, './views/settings.html'))
+})
+
 app.listen(port, () => {
     console.log('Server started at http://localhost:' + port)
 })
