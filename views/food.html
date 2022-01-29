@@ -112,6 +112,11 @@
           }
 
         })
+
+        breakfast.sort((a, b) => a.x - b.x)
+        lunch.sort((a, b) => a.x - b.x)
+        dinner.sort((a, b) => a.x - b.x)
+
         drawChart()
       }
       else {
